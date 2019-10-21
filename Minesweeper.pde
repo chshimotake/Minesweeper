@@ -1,8 +1,9 @@
-import de.bezier.guido.*;
-//Declare and initialize constants NUM_ROWS and NUM_COLS = 20
+//import de.bezier.guido.*;
+int numRows=20;
+int numCols=20;
 private MSButton[][] buttons; //2d array of minesweeper buttons
 private ArrayList <MSButton> mines; //ArrayList of just the minesweeper buttons that are mined
-
+//mines=new MSButton[][];
 void setup ()
 {
     size(400, 400);
@@ -12,9 +13,14 @@ void setup ()
     Interactive.make( this );
     
     //your code to initialize buttons goes here
-    
-    
-    
+    buttons=new MSButton[20][20];
+    for(int a=0; a<height;a++)
+    {
+        for(int b=0;b<width;b++)
+        {
+            buttons[b][a]=new MSButton();
+        }
+    }
     setMines();
 }
 public void setMines()
@@ -61,8 +67,8 @@ public class MSButton
     
     public MSButton ( int row, int col )
     {
-        // width = 400/NUM_COLS;
-        // height = 400/NUM_ROWS;
+        width = 400/numCols;
+        height = 400/numRows;
         myRow = row;
         myCol = col; 
         x = myCol*width;
