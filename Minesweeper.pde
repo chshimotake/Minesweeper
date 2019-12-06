@@ -33,6 +33,32 @@ public void draw ()
     background(0);
     if(isWon() == true)
         displayWinningMessage();
+    for(int a=0; a<20;a++)
+    {
+        for(int b=0;b<20;b++)
+        {
+            buttons[b][a].draw();
+            buttons[b][a].mousePressed();
+            if(buttons[b][a].clicked==true&&b>0&&b<20&&a>0&&a<20)
+            {
+                println("b: "+(b+1)+", a: "+a);
+                buttons[b+1][a].clicked=true;
+                println("clicked=true");
+                println("1");
+                buttons[b+1][a+1].clicked=true;
+                println("2");
+                buttons[b][a+1].clicked=true;
+                println("3");
+                buttons[b-1][a+1].clicked=true;
+                println("4");
+                buttons[b-1][a].clicked=true;
+                println("5");
+                buttons[b-1][a-1].clicked=true;
+                buttons[b][a-1].clicked=true;
+                buttons[b+1][a-1].clicked=true;
+            }
+        }
+    }
 }
 public boolean isWon()
 {
@@ -64,13 +90,10 @@ public class MSButton
     private float x,y, wid, hei;
     private boolean clicked, flagged;
     private String myLabel;
-    
     public MSButton ( int row, int col )
     {
         clicked=false;//check the examples->contributed libraries->guido->button
-        /*flagged=false;
-        numRows=20;
-        numCols=20;
+        flagged=false;
         wid = 400/numCols;
         hei = 400/numRows;
         myRow = row;
@@ -78,24 +101,32 @@ public class MSButton
         x = myCol*wid;
         y = myRow*hei;
         myLabel = "";
-        flagged = clicked = false;*/
-        wid=10;
-        hei=10;
-        x=col*wid;
-        y=row*hei;
         Interactive.add( this ); // register it with the manager
     }
 
     // called by manager
-    public void mousePressed () 
+    public void mousePressed() 
     {
-        //if(mouseX>x&&mouseX<x+wid&&mouseY>y&&mouseY<y+wid)
-            clicked = ! clicked;
-            System.out.println("Clicked: " + clicked);
+        if(mousePressed)
+        {
+            if(mouseX>x&&mouseX<x+wid&&mouseY>y&&mouseY<y+hei)
+            {
+                clicked = true;
+                System.out.println("Clicked: " + clicked);
+            }
+        }
         //your code here
     }
     public void draw () 
     {    
+        /*if(mousePressed==true)
+        {
+            if(mouseX>x&&mouseX<x+wid&&mouseY>y&&mouseY<y+wid)
+            {
+                clicked = true;
+                System.out.println("Clicked: " + clicked);
+            }
+        }*/
         //if(flagged)
             //fill(0);
         // else if( clicked && mines.contains(this) ) 
