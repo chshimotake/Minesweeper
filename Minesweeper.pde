@@ -1,7 +1,7 @@
-//slowly try and get rid of guido assistance
 public int numRows=20;
 public int numCols=20;
-public boolean flagQ = true;
+public int boomCounter=0, endX=0,endY=0;
+public boolean open=true, boomCheck=false, gameOver=false;
 private MSButton[][] buttons; //2d array of minesweeper buttons
 private ArrayList<MSButton> mines; //ArrayList of just the minesweeper buttons that are mined
 //mines=new MSButton[][];
@@ -9,12 +9,20 @@ ArrayList<Integer> mineX=new ArrayList<Integer>();
 ArrayList<Integer> mineY=new ArrayList<Integer>();
 PImage flag;
 PImage minefield;
+PImage opening;
+PImage frame1,frame2,frame3,frame4,frame5,frame6,frame7,frame8;
+PImage[] mineBoom=new PImage[8];
 public void setup ()
 {
     size(400, 400);
     textAlign(CENTER,CENTER);
     flag=loadImage("flag.png");
     minefield=loadImage("minefield.jpeg");
+    opening=loadImage("opening.jpeg");
+    for(int i=1; i<=mineBoom.length; i++)
+    {
+        mineBoom[i-1]=loadImage("frame"+i+".gif");
+    }
     //your code to initialize buttons goes here
     buttons=new MSButton[numRows][numCols];
     for(int a=0; a<numRows;a++)
@@ -23,8 +31,53 @@ public void setup ()
         {
             buttons[a][b]=new MSButton(a,b);
         }
-    } 
+    }
     setMines();
+    checkAround();
+    freeSpace();
+    for(int a=0;a<20;a++)
+    {
+        for(int b=0;b<20;b++)
+        {
+            println(b+","+a+": "+buttons[b][a].bomb+","+buttons[b][a].ring);
+        }
+    }
+}
+
+public void freeSpace()
+{
+    if(buttons[10][10].bomb==false&&buttons[10][10].ring==0)
+    {
+        buttons[10][10].start=true;
+    }else if(buttons[10][11].bomb==false&&buttons[10][11].ring==0)
+    {
+        buttons[10][11].start=true;
+    }else if(buttons[11][11].bomb==false&&buttons[11][11].ring==0)
+    {
+        buttons[11][11].start=true;
+    }else if(buttons[11][10].bomb==false&&buttons[11][10].ring==0)
+    {
+        buttons[11][10].start=true;
+    }else if(buttons[11][9].bomb==false&&buttons[11][9].ring==0)
+    {
+        buttons[11][9].start=true;
+    }else if(buttons[10][9].bomb==false&&buttons[10][9].ring==0)
+    {
+        buttons[10][9].start=true;
+    }else if(buttons[9][9].bomb==false&&buttons[9][9].ring==0)
+    {
+        buttons[9][9].start=true;
+    }else if(buttons[9][10].bomb==false&&buttons[9][10].ring==0)
+    {
+        buttons[9][10].start=true;
+    }else if(buttons[9][11].bomb==false&&buttons[9][11].ring==0)
+    {
+        buttons[9][11].start=true;
+    }
+}
+
+public void checkAround()
+{
     for(int c=0;c<numRows;c++)
     {
         for(int d=0;d<numCols;d++)
@@ -87,43 +140,8 @@ public void setup ()
             }
         }   
     }
-    //while(buttons[(int)(Math.random()*numRows)][(int)(Math.random()*numCols)].bomb==false&&buttons[(int)(Math.random()*numRows)][(int)(Math.random()*numCols)].ring==0)
-    if(buttons[10][10].bomb==false&&buttons[10][10].ring==0)
-    {
-        buttons[10][10].start=true;
-    }else if(buttons[10][11].bomb==false&&buttons[10][11].ring==0)
-    {
-        buttons[10][11].start=true;
-    }else if(buttons[11][11].bomb==false&&buttons[11][11].ring==0)
-    {
-        buttons[11][11].start=true;
-    }else if(buttons[11][10].bomb==false&&buttons[11][10].ring==0)
-    {
-        buttons[11][10].start=true;
-    }else if(buttons[11][9].bomb==false&&buttons[11][9].ring==0)
-    {
-        buttons[11][9].start=true;
-    }else if(buttons[10][9].bomb==false&&buttons[10][9].ring==0)
-    {
-        buttons[10][9].start=true;
-    }else if(buttons[9][9].bomb==false&&buttons[9][9].ring==0)
-    {
-        buttons[9][9].start=true;
-    }else if(buttons[9][10].bomb==false&&buttons[9][10].ring==0)
-    {
-        buttons[9][10].start=true;
-    }else if(buttons[9][11].bomb==false&&buttons[9][11].ring==0)
-    {
-        buttons[9][11].start=true;
-    }
-    for(int a=0;a<20;a++)
-    {
-        for(int b=0;b<20;b++)
-        {
-            println(b+","+a+": "+buttons[b][a].bomb+","+buttons[b][a].ring);
-        }
-    }
 }
+
 public void setMines()
 {
     //your code
@@ -138,46 +156,75 @@ public void setMines()
 
 public void draw()
 {
-    background(0);
-    image(minefield,0,0,400,400);
-    if(isWon() == true)
-        displayWinningMessage();
-    for(int a=0; a<buttons.length;a++)
+    if(open==true)
     {
-        for(int b=0;b<buttons[a].length;b++)
+        background(0);
+        image(opening,0,0,400,400);
+        fill(255,255,255);
+        rect(200,190,280,60);
+        fill(0,0,0);
+        textSize(30);
+        text("press space",300,200);
+        text("to start",300,230);
+        textSize(10);
+    }else if(open==false)
+    {
+        background(0);
+        image(minefield,0,0,400,400);
+        if(isWon() == true)
+            displayWinningMessage();
+        for(int a=0; a<buttons.length;a++)
         {
-            buttons[a][b].draw();
-           // buttons[a][b].mousePressed();
-            if(buttons[a][b].clicked)
+            for(int b=0;b<buttons[a].length;b++)
             {
-                //bleh
+                buttons[a][b].draw();
+               // buttons[a][b].mousePressed();
+                if(buttons[a][b].clicked)
+                {
+                    //bleh
+                }
+            }
+        }
+        if(gameOver)
+        {
+            endX=endY=(int)(Math.random()*mineX.size());
+            boomCheck=true;
+            boomCounter=0;
+            if(mineX.size()>0)
+            {
+                boomCounter(mineX.get(endX),mineY.get(endY));
+                println("endX: "+endX);
+                println("endY: "+endY);
+                mineX.remove(endX);
+                println("mineX size: "+mineX.size());
+                mineY.remove(endY);
+                println("mineY size: "+mineY.size());
             }
         }
     }
-    keyPressed();
 }
-
-
-public void keyPressed()
+public void keyPressed() 
 {
-    switch (key)
-    {
-        case 'z':
-            flagQ=true;
-            println("flag");
-        break;
-        case 'x':
-            flagQ=false;
-            println("pole");
+    switch(key){
+        case ' ':
+            if(open==true)
+            {
+                open=false;
+                println("start is false");
+            }
         break;
     }
 }
-
- public void mousePressed() 
- {
+public void mousePressed()
+{
     int r = mouseY/numCols;
     int c = mouseX/numRows;
-    buttons[r][c].mousePressed();
+    if(open==false)
+    {
+        buttons[r][c].mousePressed();
+    }
+}
+    
 //     for(int a=0;a<buttons.length;a++)
 //     {
 //         for(int b=0;b<buttons[a].length;b++)
@@ -195,8 +242,14 @@ public void keyPressed()
 //             }
 //         }
 //     }
- }
-
+boolean overButton(int x, int y, int width, int height)  {
+    if(mouseX>=x&&mouseX<=x+width&&mouseY>=y&&mouseY<=y+height)
+    {
+        return true;
+    }else{
+        return false;
+    }
+}
 public void softClick(int x, int y)
 {
     //boolean surro=false;
@@ -263,11 +316,6 @@ public void softClick(int x, int y)
 
 
 
-
-
-
-
-
     if(isValid(x+1,y)&&buttons[y][x+1].clicked==false&&buttons[y][x+1].bomb==false)
     //add not a bomb later
     {
@@ -309,6 +357,128 @@ public void softClick(int x, int y)
         buttons[y-1][x+1].clicked=true;
     }
 }
+
+
+
+
+
+
+
+public void bombSpread(int x, int y)
+{
+    //boolean surro=false;
+    if(isValid(x+1,y)&&buttons[y][x+1].bomb==false&&buttons[y][x+1].boomClicked==false)
+    //add not a bomb later
+    {
+        buttons[y][x+1].boomClicked=true;
+        bombSpread(x+1,y);
+    }
+    if(isValid(x+1,y+1)&&buttons[y+1][x+1].bomb==false&&buttons[y+1][x+1].boomClicked==false)
+    //add not a bomb later
+    {
+        buttons[y+1][x+1].boomClicked=true;
+        bombSpread(x+1,y+1);
+    }
+    if(isValid(x,y+1)&&buttons[y+1][x].bomb==false&&buttons[y+1][x].boomClicked==false)
+    //add not a bomb later
+    {
+        buttons[y+1][x].boomClicked=true;
+        bombSpread(x,y+1);
+    }
+    if(isValid(x-1,y+1)&&buttons[y+1][x-1].bomb==false&&buttons[y+1][x-1].boomClicked==false)
+    //add not a bomb later
+    {
+        buttons[y+1][x-1].boomClicked=true;
+        bombSpread(x-1,y+1);
+    }
+    if(isValid(x-1,y)&&buttons[y][x-1].bomb==false&&buttons[y][x-1].boomClicked==false)
+    //add not a bomb later
+    {
+        buttons[y][x-1].boomClicked=true;
+        bombSpread(x-1,y);
+    }
+    if(isValid(x-1,y-1)&&buttons[y-1][x-1].bomb==false&&buttons[y-1][x-1].boomClicked==false)
+    //add not a bomb later
+    {
+        buttons[y-1][x-1].boomClicked=true;
+        bombSpread(x-1,y-1);
+    }
+    if(isValid(x,y-1)&&buttons[y-1][x].bomb==false&&buttons[y-1][x].boomClicked==false)
+    //add not a bomb later
+    {
+        buttons[y-1][x].boomClicked=true;
+        bombSpread(x,y-1);
+    }
+    if(isValid(x+1,y-1)&&buttons[y-1][x+1].bomb==false&&buttons[y-1][x+1].boomClicked==false)
+    //add not a bomb later
+    {
+        buttons[y-1][x+1].boomClicked=true;
+        bombSpread(x+1,y-1);
+    }
+
+
+
+
+
+
+
+
+    if(isValid(x+1,y)&&buttons[y][x+1].bomb==true)
+    //add not a bomb later
+    {
+        buttons[y][x+1].boom=true;
+    }else if(isValid(x+1,y+1)&&buttons[y+1][x+1].bomb==true)
+    //add not a bomb later
+    {
+        buttons[y+1][x+1].boom=true;
+    }else if(isValid(x,y+1)&&buttons[y+1][x].bomb==true)
+    
+    {
+        buttons[y+1][x].boom=true;
+    }else if(isValid(x-1,y+1)&&buttons[y+1][x-1].bomb==true)
+    //add not a bomb later
+    {
+        buttons[y+1][x-1].boom=true;
+    }else if(isValid(x-1,y)&&buttons[y][x-1].bomb==true)
+    //add not a bomb later
+    {
+        buttons[y][x-1].boom=true;
+    }else if(isValid(x-1,y-1)&&buttons[y-1][x-1].bomb==true)
+    //add not a bomb later
+    {
+        buttons[y-1][x-1].boom=true;
+    }else if(isValid(x,y-1)&&buttons[y-1][x].bomb==true)
+    //add not a bomb later
+    {
+        buttons[y-1][x].boom=true;
+    }else if(isValid(x+1,y-1)&&buttons[y-1][x+1].bomb==true)
+    //add not a bomb later
+    {
+        buttons[y-1][x+1].boom=true;
+    }
+}
+
+void boomCounter(int x, int y)
+{
+    if(boomCounter<180&&boomCheck)
+    {
+        if(boomCounter/10<9)
+        {
+            image(mineBoom[boomCounter/10], x,y,100,100);
+        }
+        if(boomCounter==180)
+        {
+            boomCheck=false;
+            boomCounter=0;
+        }
+        if(boomCheck)
+        {
+            boomCounter++;
+        }
+    }
+}
+
+
 public boolean isWon()
 {
     //your code here
@@ -342,7 +512,7 @@ public class MSButton
     private int myRow, myCol;//, numRows, numCols;
     public int ring=0;
     private float x,y, wid, hei;
-    private boolean clicked, flagged, bomb, start;
+    private boolean clicked, flagged, bomb, start, boom, boomClicked;
     private String myLabel;
     public MSButton ( int row, int col )
     {
@@ -350,6 +520,8 @@ public class MSButton
         flagged=false;
         start=false;
         bomb=false;
+        boom=false;
+        boomClicked=false;
         wid = 400/numCols;
         hei = 400/numRows;
         myRow = row;
@@ -374,6 +546,10 @@ public class MSButton
     // called by manager
     public void mousePressed() 
     {
+        if(mousePressed&&mouseButton==LEFT&&bomb)
+        {
+            gameOver=true;
+        }
         if(mousePressed&&mouseButton==RIGHT&&clicked!=true)
         {
             if(mouseX>x&&mouseX<x+wid&&mouseY>y&&mouseY<y+hei)
@@ -406,22 +582,10 @@ public class MSButton
                 }
             }
         }
-        //your code here
     }
+        //your code here
     public void draw () 
     {    
-        /*if(mousePressed)
-        {
-            if(mouseX>x&&mouseX<x+wid&&mouseY>y&&mouseY<y+wid)
-            {
-                clicked = true;
-                System.out.println("Clicked: " + clicked);
-            }
-        }*/
-        //if(flagged)
-            //fill(0);
-        // else if( clicked && mines.contains(this) ) 
-        //     fill(255,0,0);
         if(flagged==false)
         {
             if(clicked)
@@ -437,9 +601,10 @@ public class MSButton
             }else{
                 fill(125,125,125,0);
             }
-            //if(bomb)
-            //    fill(0,255,0);
-            //fix this shit
+            if(boom)
+            {
+                fill(50,125,255);
+            }
             rect(x, y, wid, hei);
         }
         else
@@ -459,14 +624,7 @@ public class MSButton
             fill(255,255,0);
             text(ring,x+wid/2,y+hei/2);
         }
-        //fill(0);
-        //text(myLabel,x+wid/2,y+hei/2);
     }
-    /*
-    public void setLabel(String newLabel)
-    {
-        myLabel = newLabel;
-    }*/
     public void setLabel(int newLabel)
     {
         myLabel = ""+ newLabel;
