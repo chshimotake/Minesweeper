@@ -1,7 +1,7 @@
 public int numRows=20;
 public int numCols=20;
 public int boomCounter=0, endX=0,endY=0;
-public boolean open=true, boomCheck=false, gameOver=false;
+public boolean open=true, boomCheck=false, gameOver=false, gameOverMessageDisplay=false;
 private MSButton[][] buttons; //2d array of minesweeper buttons
 private ArrayList<MSButton> mines; //ArrayList of just the minesweeper buttons that are mined
 //mines=new MSButton[][];
@@ -185,21 +185,34 @@ public void draw()
                 }
             }
         }
+        boomCounter();
         if(gameOver)
         {
-            endX=endY=(int)(Math.random()*mineX.size());
-            boomCheck=true;
-            boomCounter=0;
-            if(mineX.size()>0)
+            for(int a=0;a<buttons.length;a++)
             {
-                boomCounter(mineX.get(endX),mineY.get(endY));
-                println("endX: "+endX);
-                println("endY: "+endY);
-                mineX.remove(endX);
-                println("mineX size: "+mineX.size());
-                mineY.remove(endY);
-                println("mineY size: "+mineY.size());
+                for(int b=0;b<buttons[a].length;b++)
+                {
+                    if(buttons[a][b].bomb==true)
+                    {
+                        buttons[a][b].clicked=true;
+                    }
+                }
             }
+            if(boomCheck==false)
+            {
+                boomCounter=0;
+                boomCheck=true;
+            }
+        }
+        if(gameOverMessageDisplay)
+        {
+            fill(255,255,255);
+            rect(50,180,300,50);
+            fill(255,0,0);
+            textSize(50);
+            text("GAME OVER",200,200);
+            textSize(10);
+            println("GAME OVER");
         }
     }
 }
@@ -458,22 +471,42 @@ public void bombSpread(int x, int y)
     }
 }
 
-void boomCounter(int x, int y)
+void boomCounter()
 {
-    if(boomCounter<180&&boomCheck)
+    if(boomCounter<=105&&boomCheck)
     {
-        if(boomCounter/10<9)
+        if((boomCounter/3<7)&&boomCounter<21)
         {
-            image(mineBoom[boomCounter/10], x,y,100,100);
+            image(mineBoom[(int)(boomCounter/3)],50,50,100,100);
         }
-        if(boomCounter==180)
+        if(((boomCounter-21)/3<7)&&boomCounter>=21&&boomCounter<42)
         {
+            image(mineBoom[(int)((boomCounter-21)/3)],250,50,100,100);
+        }
+        if(((boomCounter-42)/3<7)&&boomCounter>=42&&boomCounter<63)
+        {
+            image(mineBoom[(int)((boomCounter-42)/3)],250,250,100,100);
+        }
+        if(((boomCounter-63)/3<7)&&boomCounter>=63&&boomCounter<84)
+        {
+            image(mineBoom[(int)((boomCounter-63)/3)],50,250,100,100);
+        }
+        if(((boomCounter-84)/3<7)&&boomCounter>=84&&boomCounter<105)
+        {
+            image(mineBoom[(int)((boomCounter-84)/3)],100,100,200,200);
+        }
+        if(boomCounter>=105)
+        {
+            gameOverMessageDisplay=true;
+            println("GAMEOVERMESSAGEDISPLAY");
             boomCheck=false;
             boomCounter=0;
         }
         if(boomCheck)
         {
             boomCounter++;
+            println(boomCounter);
+            println(boomCheck);
         }
     }
 }
@@ -591,9 +624,13 @@ public class MSButton
             if(clicked)
             {
                 fill(0,255,0,100);
-                if(ring>0)
+                if(ring>0&&bomb==false)
                 {
                     fill(0,0,255,100);
+                }
+                if(bomb==true)
+                {
+                    fill(255,0,0);
                 }
             }else if(start)
             {
@@ -601,10 +638,10 @@ public class MSButton
             }else{
                 fill(125,125,125,0);
             }
-            if(boom)
-            {
-                fill(50,125,255);
-            }
+            // if(bomb&&clicked==true)
+            // {
+            //     fill(255,0,0);
+            // }
             rect(x, y, wid, hei);
         }
         else
@@ -619,7 +656,7 @@ public class MSButton
             fill(127, 127, 0);
             image(flag,x,y,wid,hei);
 
-        }else if(ring>0&&clicked&&flagged==false)
+        }else if(ring>0&&clicked&&flagged==false&&bomb==false)
         {
             fill(255,255,0);
             text(ring,x+wid/2,y+hei/2);
