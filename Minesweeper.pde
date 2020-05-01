@@ -35,13 +35,13 @@ public void setup ()
     setMines();
     checkAround();
     freeSpace();
-    for(int a=0;a<20;a++)
-    {
-        for(int b=0;b<20;b++)
-        {
-            println(b+","+a+": "+buttons[b][a].bomb+","+buttons[b][a].ring);
-        }
-    }
+    //for(int a=0;a<20;a++)
+    //{
+    //    for(int b=0;b<20;b++)
+    //    {
+    //        println(b+","+a+": "+buttons[b][a].bomb+","+buttons[b][a].ring);
+    //    }
+    //}
 }
 
 public void freeSpace()
@@ -212,7 +212,7 @@ public void draw()
             textSize(50);
             text("GAME OVER",200,200);
             textSize(10);
-            println("GAME OVER");
+            //println("GAME OVER");
         }
     }
 }
@@ -223,7 +223,7 @@ public void keyPressed()
             if(open==true)
             {
                 open=false;
-                println("start is false");
+                //println("start is false");
             }
         break;
     }
@@ -250,7 +250,7 @@ public void mousePressed()
 //                         buttons[a][b].flagged=true;
 //                     if(flagged==false)
 //                         buttons[a][b].flagged=false;
-//                     println("flagged");
+//                     //println("flagged");
 //                 }
 //             }
 //         }
@@ -270,56 +270,56 @@ public void softClick(int x, int y)
     //add not a bomb later
     {
         buttons[y][x+1].clicked=true;
-        println(x+1, y);
+        //println(x+1, y);
         softClick(x+1,y);
     }
     if(isValid(x+1,y+1)&&buttons[y+1][x+1].clicked==false&&buttons[y+1][x+1].bomb==false&&buttons[y+1][x+1].ring==0)
     //add not a bomb later
     {
         buttons[y+1][x+1].clicked=true;
-        println(x+1, y+1);
+        //println(x+1, y+1);
         softClick(x+1,y+1);
     }
     if(isValid(x,y+1)&&buttons[y+1][x].clicked==false&&buttons[y+1][x].bomb==false&&buttons[y+1][x].ring==0)
     //add not a bomb later
     {
         buttons[y+1][x].clicked=true;
-        println(x, y+1);
+        //println(x, y+1);
         softClick(x,y+1);
     }
     if(isValid(x-1,y+1)&&buttons[y+1][x-1].clicked==false&&buttons[y+1][x-1].bomb==false&&buttons[y+1][x-1].ring==0)
     //add not a bomb later
     {
         buttons[y+1][x-1].clicked=true;
-        println(x-1, y+1);
+        //println(x-1, y+1);
         softClick(x-1,y+1);
     }
     if(isValid(x-1,y)&&buttons[y][x-1].clicked==false&&buttons[y][x-1].bomb==false&&buttons[y][x-1].ring==0)
     //add not a bomb later
     {
         buttons[y][x-1].clicked=true;
-        println(x-1, y);
+        //println(x-1, y);
         softClick(x-1,y);
     }
     if(isValid(x-1,y-1)&&buttons[y-1][x-1].clicked==false&&buttons[y-1][x-1].bomb==false&&buttons[y-1][x-1].ring==0)
     //add not a bomb later
     {
         buttons[y-1][x-1].clicked=true;
-        println(x-1, y-1);
+        //println(x-1, y-1);
         softClick(x-1,y-1);
     }
     if(isValid(x,y-1)&&buttons[y-1][x].clicked==false&&buttons[y-1][x].bomb==false&&buttons[y-1][x].ring==0)
     //add not a bomb later
     {
         buttons[y-1][x].clicked=true;
-        println(x, y-1);
+        //println(x, y-1);
         softClick(x,y-1);
     }
     if(isValid(x+1,y-1)&&buttons[y-1][x+1].clicked==false&&buttons[y-1][x+1].bomb==false&&buttons[y-1][x+1].ring==0)
     //add not a bomb later
     {
         buttons[y-1][x+1].clicked=true;
-        println(x+1, y-1);
+        //println(x+1, y-1);
         softClick(x+1,y-1);
     }
 
@@ -498,15 +498,15 @@ void boomCounter()
         if(boomCounter>=105)
         {
             gameOverMessageDisplay=true;
-            println("GAMEOVERMESSAGEDISPLAY");
+            //println("GAMEOVERMESSAGEDISPLAY");
             boomCheck=false;
             boomCounter=0;
         }
         if(boomCheck)
         {
             boomCounter++;
-            println(boomCounter);
-            println(boomCheck);
+            //println(boomCounter);
+            //println(boomCheck);
         }
     }
 }
@@ -572,7 +572,7 @@ public class MSButton
             if(mouseX>x&&mouseX<x+wid&&mouseY>y&&mouseY<y+hei)
             {
                 flagged=!flagged;
-                println("flagged");
+                //println("flagged");
             }
         }
     }*/
@@ -592,7 +592,7 @@ public class MSButton
                 // if(flagQ==false)
                 //     flagged=false;
                 flagged=!flagged;
-                println("flagged");
+                //println("flagged");
             }
         }
         if(mousePressed&&flagged==false&&mouseButton==LEFT)
@@ -603,7 +603,7 @@ public class MSButton
                 {
                     clicked = true;
                     softClick(myCol, myRow);
-                    println(myRow+", "+myCol+" has been clicked");
+                    //println(myRow+", "+myCol+" has been clicked");
                 }
                 if(ring>0&&flagged==false)
                 {
@@ -759,7 +759,7 @@ public void setup ()
     {
         for(int b=0;b<20;b++)
         {
-            println(b+","+a+": "+buttons[b][a].bomb+","+buttons[b][a].ring);
+            //println(b+","+a+": "+buttons[b][a].bomb+","+buttons[b][a].ring);
         }
     }
 }
@@ -879,7 +879,7 @@ public class MSButton
                 {
                     clicked = true;
                     softClick(myCol, myRow);
-                    println(myRow+", "+myCol+" has been clicked");
+                    //println(myRow+", "+myCol+" has been clicked");
                 }
                 if(ring>0)
                 {
